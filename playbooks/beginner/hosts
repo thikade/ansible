@@ -1,0 +1,8 @@
+#[demoboxes]
+# example of setting a host inventory by IP address.
+# also demonstrates how to set per-host variables.
+#192.168.1.97 remote_user=tom access_user=tom
+
+
+[ansible-demo-group]
+207.154.246.85

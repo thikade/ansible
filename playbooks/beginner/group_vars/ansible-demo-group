@@ -1,0 +1,4 @@
+---
+# this matches the host group in the inventory file, with the same name [ansible-demo-group] etc.
+
+sources_type: proxy

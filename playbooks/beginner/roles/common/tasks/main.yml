@@ -1,0 +1,20 @@
+---
+# This is very useful.  Basically translates to "run apt-get update" on the target
+  - name: Regenerate apt-cache
+    apt: update_cache=yes
+
+#If you're doing lots of packages at once, you can use with_items, and provide the apt: module with pkg={{ item }} and you get something like a foreach in [list] effect.
+  - name: install default packages
+    apt: pkg={{ item }} state=installed
+    with_items:
+      - aptitude
+      - vim
+      - supervisor
+      - python-dev
+      - htop
+      - screen
+      - python-pycurl
+      - python-lxml
+      - git-core
+      - unzip
+      - curl

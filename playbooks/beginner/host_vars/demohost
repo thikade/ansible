@@ -1,0 +1,2 @@
+# this applies to a whole host matching the hostname with the name of this file.
+foo: bar
