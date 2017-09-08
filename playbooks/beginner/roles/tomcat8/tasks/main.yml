@@ -34,9 +34,11 @@
     msg: "Instance {{ tomcat_instance['name'] }} exists"
   when: tc_exists.stat.isdir is defined and tc_exists.stat.isdir
 
-- name: create tomcat instance
-  command: /bin/bash /usr/local/tomcat-admin/tc.sh -n {{ tomcat_instance['name'] }} --offset={{ tomcat_instance['offset'] }} -o
-  when: tc_exists.stat.isdir is undefined
+
+# - name: create tomcat instance
+#   command: /bin/bash /usr/local/tomcat-admin/tc.sh -n {{ tomcat_instance['name'] }} --offset={{ tomcat_instance['offset'] }} -o
+#   when: tc_exists.stat.isdir is undefined
+
 
 - name: create more tomcat instances
   command: /bin/bash /usr/local/tomcat-admin/tc.sh -n {{ item['name'] }} --offset={{ item['offset'] }} -o
