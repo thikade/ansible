@@ -1,7 +1,7 @@
 ---
 # this matches the host group in the inventory file, with the same name [ansible-demo-group] etc.
 
-sources_type: proxy
+foo: bar
 
 tomcat_instance:
   name: U1
@@ -9,10 +9,10 @@ tomcat_instance:
 
 
 tomcat_instances:
-  - name: test1
+  - name: TEST1
     offset: 0
     options:
 
-  - name: test2
+  - name: TEST2
     offset: 1
     options:

@@ -1,0 +1,5 @@
+
+- include: looped_instance.yml
+  with_items: "{{ tomcat_instances }}"
+  loop_control:
+    loop_var: loop_item

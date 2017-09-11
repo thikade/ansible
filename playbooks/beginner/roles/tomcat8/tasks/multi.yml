@@ -1,0 +1,60 @@
+---
+# tasks file for tomcat8
+# - name: checkout latest TC release
+#   git:
+#     repo: ssh://git@github.com:repo.git
+#     dest: /usr/local/tomcat-admin
+#     accept_hostkey: true
+
+# # alternatively copy from local dir in files/
+# - name: copy TC-Admin distribution
+#   copy:
+#     force=no
+#     src=tomcat-admin/tomcat8/
+#     dest=/usr/local/tomcat-admin
+
+- name: create Tomcat group
+  group:
+    name: tomcat
+    state: present
+
+- name: create Tomcat user
+  user:
+    name: tomcat
+    state: present
+    comment: "Tomcat runtime user"
+    group: tomcat
+
+
+
+### single instance defined in var: 'tomcat_instance'
+# - name: check if instance exists
+#   stat:
+#     path: /opt/tomcat/{{ tomcat_instance['name'] }}
+#   register: tc_exists
+#
+# - debug:
+#     msg: "Instance {{ tomcat_instance['name'] }} exists"
+#   when: tc_exists.stat.isdir is defined and tc_exists.stat.isdir
+#
+# - name: create tomcat instance
+#   command: /bin/bash /usr/local/tomcat-admin/tc.sh -n {{ tomcat_instance['name'] }} --offset={{ tomcat_instance['offset'] }} -o
+#   when: tc_exists.stat.isdir is undefined
+
+
+- name: create more tomcat instances
+  command: "/bin/bash /usr/local/tomcat-admin/tc.sh -n {{ item['name'] }} --offset={{ item['offset'] }}"
+  with_items: "{{ tomcat_instances }}"
+  register: command_result
+  ignore_errors: yes
+
+- name: print command result
+  debug:
+    msg: "{{ item }} "
+  with_items: "{{ command_result.results | map(attribute='stdout') | list }}"
+
+- name: fail the play if the tc.sh did not succeed
+  fail: msg="tc command failed"
+  when: "'Aborting' in item.stdout"
+  with_items: "{{ command_result.results }}"
+  no_log: True
