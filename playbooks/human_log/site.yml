@@ -1,0 +1,24 @@
+---
+
+- name: human_log demo
+  hosts: ansible-demo-group
+  vars:
+    simple:
+      name: test
+      property: abc
+
+    complex:
+      - name: test-1
+        property: abc-1
+      - name: test-2
+        property: abc-2
+
+  gather_facts: no
+
+  tasks:
+  - name: test simple data structure command
+    command: echo "name {{ simple['name'] }}   property {{ simple['property'] }}"
+
+  - name: test complex data structure command
+    command: echo "name {{ item['name'] }} property {{ item['property'] }}"
+    with_items: "{{ complex }}"
