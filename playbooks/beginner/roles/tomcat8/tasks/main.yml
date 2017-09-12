@@ -1,3 +1,20 @@
+---
+
+# tasks file for tomcat8
+# - name: checkout latest TC release
+#   git:
+#     repo: ssh://git@github.com:repo.git
+#     dest: /usr/local/tomcat-admin
+#     accept_hostkey: true
+
+# alternatively copy from local dir in files/
+- name: copy TC-Admin distribution
+  copy:
+    force=no
+    src=tomcat-admin/tomcat8/
+    dest=/usr/local/tomcat-admin
+
+
 # - include: single.yml
 # - include: multi.yml
 - include: loop_control.yml
