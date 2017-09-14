@@ -28,10 +28,10 @@
 
 - name: create tomcat instance
   command: /bin/bash /usr/local/tomcat-admin/tc.sh -n {{ tomcat_instance['name'] }} --offset={{ tomcat_instance['offset'] }}
-  # when: tc_exists.stat.isdir is undefined
+  when: tc_exists.stat.isdir is undefined
   register: command_result
 
-# - name: show Command result
-#   debug:
-#     msg: "{{ command_result }} "
-#   when: tc_exists.stat.isdir is undefined
+- name: show Command result
+  debug:
+    msg: "{{ command_result }} "
+  when: tc_exists.stat.isdir is undefined

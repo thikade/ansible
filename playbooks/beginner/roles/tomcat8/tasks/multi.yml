@@ -29,19 +29,35 @@
 #   when: tc_exists.stat.isdir is undefined
 
 
-- name: create more tomcat instances
-  command: "/bin/bash /usr/local/tomcat-admin/tc.sh -n {{ item['name'] }} --offset={{ item['offset'] }}"
+- name: check if instances exists
+  stat:
+    path: /opt/tomcat/{{ item['name'] }}
   with_items: "{{ tomcat_instances }}"
-  register: command_result
+  register: tc_exists
+
+- debug:
+    msg: "Instance {{ tomcat_instance['name'] }} exists"
+  when: item.stat.isdir is defined and item.stat.isdir
+  with_items: "{{ tc_exists.results }}"
+  # with_items: "{{ tc_exists.results | map(attribute='stat') | list }}"
+
+- name: create more tomcat instances
+  command: "/bin/bash /usr/local/tomcat-admin/tc.sh -n {{ item.0.name }} --offset={{ item.0.offset }}"
+  when: "item.1.stat.isdir is undefined"
+  with_together:
+    -  "{{ tomcat_instances }}"
+    -  "{{ tc_exists.results }}"
+  # register: command_result
   ignore_errors: yes
-
-- name: print command result
-  debug:
-    msg: "{{ item }} "
-  with_items: "{{ command_result.results | map(attribute='stdout') | list }}"
-
-- name: fail the play if the tc.sh did not succeed
-  fail: msg="tc command failed"
-  when: "'Aborting' in item.stdout"
-  with_items: "{{ command_result.results }}"
-  no_log: True
+#
+# - name: print command result
+#   debug:
+#     msg: "{{ item }} "
+#   with_items: "{{ command_result.results | map(attribute='stdout') | list }}"
+#   # with_items: "{{ command_result.results}}"
+#
+# - name: fail the play if the tc.sh did not succeed
+#   fail: msg="tc command failed"
+#   when: "'Aborting' in item.stdout"
+#   with_items: "{{ command_result.results }}"
+#   no_log: True

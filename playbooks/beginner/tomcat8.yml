@@ -10,5 +10,6 @@
   tasks:
   - name: test connection using ping
     ping:
+
   roles:
   - tomcat8
