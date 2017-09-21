@@ -8,11 +8,11 @@
 #     accept_hostkey: true
 
 # alternatively copy from local dir in files/
-# - name: copy TC-Admin distribution
-#   copy:
-#     force=no
-#     src=tomcat-admin/tomcat8/
-#     dest=/usr/local/tomcat-admin
+- name: copy TC-Admin distribution
+  copy:
+    force=no
+    src=tomcat-admin/tomcat8/
+    dest=/usr/local/tomcat-admin
 
 
 # - include: single.yml
