@@ -1,0 +1,23 @@
+---
+
+- name: create app dir
+  file:
+    name: /opt/tomcat/{{ item.0.name }}/adminapps/probe24
+    state: directory
+  with_together:
+    -  "{{ tomcat_instances }}"
+
+- name: install unzip as required by module unarchive
+  zypper:
+    name: unzip
+    state: present
+
+- name: deploy applications
+  unarchive:
+    src: apps/probe24.war.zip
+    dest: /opt/tomcat/{{ item.0.name }}/adminapps/probe24
+
+  with_together:
+    -  "{{ tomcat_instances }}"
+  #   -  "{{ tc_exists.results }}"
+  register: command_result

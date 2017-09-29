@@ -1,0 +1,6 @@
+<Context privileged="true" path="/probe" docBase="${catalina.base}/adminapps/probe24">
+        <Valve className="org.apache.catalina.valves.RemoteAddrValve" addConnectorPort="true" allow=".*;(${tc.ports.manager}|${tc.ports.manager.secure})" />
+        <Realm className="org.apache.catalina.realm.LockOutRealm">
+            <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
+        </Realm>
+</Context>
