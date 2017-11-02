@@ -1,0 +1,25 @@
+---
+
+- name: test play
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    objects:
+      - name: a
+        params:
+          - "A1=1"
+          - "A2=2"
+      - name: b
+        params:
+          - "B1=1"
+          - "B2=2"
+
+  tasks:
+  - name:  debug
+    debug:
+      msg: "{{ item.params | map('regex_replace','^', '-p ') | join(' ') }}"
+    with_items:
+      - "{{ objects }}"
+
+
