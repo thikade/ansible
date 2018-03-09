@@ -2,10 +2,11 @@
 
 - name: create app dir
   file:
-    name: /opt/tomcat/{{ item.0.name }}/adminapps/probe24
+    name: /opt/tomcat/{{ item.0.name }}/{{ item.1.dir }}/{{ item.1.appName }}
     state: directory
-  with_together:
+  with_nested:
     -  "{{ tomcat_instances }}"
+    -  [ { file: "probe24.war.zip", appName: "probe24", dir: "adminapps" }, { file: "jolokia.war", appName: "jolokia", dir: "adminapps" }]
 
 - name: install unzip as required by module unarchive
   zypper:
@@ -14,10 +15,11 @@
 
 - name: deploy applications
   unarchive:
-    src: apps/probe24.war.zip
-    dest: /opt/tomcat/{{ item.0.name }}/adminapps/probe24
+    src: apps/{{ item.1.file }}
+    dest: /opt/tomcat/{{ item.0.name }}/{{ item.1.dir }}/{{ item.1.appName }}
 
-  with_together:
+  with_nested:
     -  "{{ tomcat_instances }}"
-  #   -  "{{ tc_exists.results }}"
+    -  [ { file: "probe24.war.zip", appName: "probe24", dir: "adminapps" }, { file: "jolokia.war", appName: "jolokia", dir: "adminapps" }]
   register: command_result
+
