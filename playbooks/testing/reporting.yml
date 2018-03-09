@@ -1,0 +1,24 @@
+---
+
+- name: Test reporting using Jinja templates
+  hosts: ansible-demo-group
+  gather_facts: no
+
+  vars: 
+    command: "uptime"
+    tpl: "templates/report.j2"
+    output: "/tmp/report.txt"
+
+  tasks: 
+
+  - name: Check uptime
+    shell: "{{ command }}"
+    register: cmd_result
+
+  - name: Generate report 
+    template: 
+      src:  "{{ tpl }}"
+      dest: "{{ output }}"
+    delegate_to: localhost 
+    run_once: true 
+

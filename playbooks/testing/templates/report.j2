@@ -1,0 +1,7 @@
+Display uptime for each host:
+===================================
+{% for i in play_hosts | sort %}
+  {{ i }}: 
+           {{ hostvars[i]['cmd_result']['stdout'] }}
+
+{% endfor %}

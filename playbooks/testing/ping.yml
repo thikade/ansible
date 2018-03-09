@@ -1,0 +1,13 @@
+---
+
+- name: test nodes
+  hosts: ansible-demo-group
+  # remote_user: root
+  # become: no
+  # become_method: sudo
+  # become_user: root
+  gather_facts: no
+  tasks:
+  - name: test connection using ping
+    ping:
+

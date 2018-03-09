@@ -1,0 +1,23 @@
+---
+
+- name: connection test
+  hosts: ansible-demo-group
+  remote_user: root
+  become: no
+  become_method: sudo
+  become_user: root
+  gather_facts: no
+  tasks:
+  - name: test connection using ping
+    ping:
+
+
+# another play in default PB
+- name: Apply common configuration to all target nodes
+  hosts: ansible-demo-group-disabled
+  remote_user: root
+  become: no
+  become_method: sudo
+  become_user: root
+  roles:
+    - common

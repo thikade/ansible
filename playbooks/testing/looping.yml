@@ -1,0 +1,43 @@
+---
+
+- name: test nodes
+  hosts: ansible-demo-group
+  # remote_user: root
+  # become: no
+  # become_method: sudo
+  # become_user: root
+  gather_facts: no
+
+  vars: 
+    filesystems:
+      - /
+      - /tmp
+
+    size_too_big: 20
+
+  tasks:
+  - name: test connection using ping
+    ping:
+
+
+  - name: check FS size
+    shell: df -h "{{ item }}" | tail -n 1 | awk {'print $5 '}  | sed 's/%//g'
+    with_items: "{{ filesystems }}" 
+    register: test
+
+  - debug:
+      msg: "{{ test.results|map(attribute='stdout')|list }}"
+
+  - name: Size is big
+    debug: 
+      msg:  "too big size: {{ item}} "
+    when: item > size_too_big
+    with_items: "{{ test.results|map(attribute='stdout')|list}}"
+
+  - name: Size is big v2
+    debug: 
+      msg:  "{{ item.1 }} is too big! size: {{ item.0}} "
+    when: item.0 > size_too_big
+    with_together: 
+       - "{{ test.results|map(attribute='stdout')|list}}"
+       - "{{ filesystems }}"

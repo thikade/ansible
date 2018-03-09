@@ -1,0 +1,18 @@
+---
+# this matches the host group in the inventory file, with the same name [ansible-demo-group] etc.
+
+foo: bar
+
+tomcat_instance:
+  name: U1
+  offset: 0
+
+
+tomcat_instances:
+  - name: TEST1
+    offset: 0
+    options:
+
+  - name: TEST2
+    offset: 1
+    options:
