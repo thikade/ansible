@@ -1,0 +1,94 @@
+---
+
+- name: dictionary test cases
+  hosts: all
+  # remote_user: root
+  # become: no
+  # become_method: sudo
+  # become_user: root
+  gather_facts: no
+
+  vars:
+      defaults:
+          http: 80
+          https: 443
+          manager: 9080
+          offset: 0
+
+      someList:
+          - name: entry01
+            port_http: 8080
+            port_https: 8443
+            port_manager: 9080
+
+          - name: entry02
+            port_offset: 1
+              # uses port offset
+          - name: entry03
+              # uses http default
+          - name: entry04
+            port_manager: 7777
+
+
+      someDictionary:
+          entry01:
+             port_http: 8080
+             port_https: 8443
+             port_manager: 9080
+
+          entry02:
+             port_offset: 5
+             # uses http defaults + offset
+
+          entry03:
+             # uses http defaults + default_offset
+
+          entry04:
+             # uses http defaults + default_offset
+             # PLUS specific port override
+             port_manager: 7777
+
+  tasks:
+  # - name: test connection using ping
+  #   ping:
+
+  - debug:
+       var: item
+    loop: "{{ someList }}"
+
+  - name: iterate over someList and build cmdline string
+    set_fact:
+        port_map: |
+            {{ port_map | default([]) +
+            [
+             'cmdline: ./' + item.name + '  --http=' + (item.port_http | default( defaults.http + (item.port_offset|default(defaults.offset)))|string)
+             + ' --https=' + (item.port_https | default( defaults.https + (item.port_offset|default(defaults.offset)))|string)
+             + ' --manager=' + (item.port_manager | default( defaults.manager + (item.port_offset|default(defaults.offset)))|string)
+            ]
+            }}
+    loop: "{{someList}}"
+
+  - debug:
+      var: port_map
+
+
+  # dictsort will return items like this:
+  # item={'key': 'entry01', 'value': {'port_offset': 1}}
+  - name: someDictionary WITH dictsort
+    debug:
+       msg: "{{ item }}"
+    loop: "{{someDictionary | dictsort }}"
+
+  # dict2items will return items like this:
+  # item={'key': 'entry01', 'value': {'port_offset': 1}}
+  - name: someDictionary WITH dict2items
+    debug:
+       msg: "{{ item }}"
+    loop: "{{someDictionary | dict2items }}"
+
+  # dict2items will return items like this:
+  # item={'key': 'entry01', 'value': {'port_offset': 1}}
+  - name: complex functions using someDictionary WITH dict2items
+    debug:
+       msg: "{{ item.key }}:     {{item.value|default({'port_http': -1})}}"
+    loop: "{{someDictionary | dict2items }}"

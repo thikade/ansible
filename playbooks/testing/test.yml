@@ -1,0 +1,26 @@
+---
+
+- name: test nodes
+  hosts: ansible-demo-group
+  # remote_user: root
+  # become: no
+  # become_method: sudo
+  # become_user: root
+  gather_facts: no
+
+  vars: 
+      stdout1: "N 3"
+      stdout2: "N 4"
+
+  tasks:
+  - name: test connection using ping
+    ping:
+
+  
+
+  - name: Check whether run level is set to Multi-User System
+    command: "echo {{ stdout2 }}"
+    register: rlevel_status
+    changed_when: false
+    failed_when: rlevel_status.stdout.split()[1] != '3'
+
