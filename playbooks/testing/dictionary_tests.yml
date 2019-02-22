@@ -90,5 +90,13 @@
   # item={'key': 'entry01', 'value': {'port_offset': 1}}
   - name: complex functions using someDictionary WITH dict2items
     debug:
-       msg: "{{ item.key }}:     {{item.value|default({'port_http': -1})}}"
+       msg: "{{ item.key }}:
+         {{item.value is not none|ternary(
+             item.value.port_http|default( defaults.http + (item.value.port_offset|default(defaults.offset))  ),
+             defaults.http + (item.port_offset|default(defaults.offset))
+         ) }}"
     loop: "{{someDictionary | dict2items }}"
+    loop_control:
+       label: "dict2items"
+  # - debug:
+  #       msg: "{{ ['x','y'] | map('extract', {'x': 42, 'y': 31}) | list }}"
